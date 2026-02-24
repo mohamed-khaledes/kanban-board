@@ -1,4 +1,5 @@
 # Kanban Board
+<img width="1906" height="908" alt="Screenshot 2026-02-24 162644" src="https://github.com/user-attachments/assets/712bf4de-14e1-42aa-ba3c-eec342f34977" />
 
 A Kanban-board task management app built with **Next.js 14 App Router**, **TypeScript**, **Tailwind
 CSS**, **Zustand**, **TanStack React Query**, and **json-server**.
