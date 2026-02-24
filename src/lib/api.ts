@@ -1,10 +1,8 @@
 import axios from "axios";
 import { Task, TaskFormData } from "@/types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-
 export const apiClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: '/api',
   headers: { "Content-Type": "application/json" },
 });
 
