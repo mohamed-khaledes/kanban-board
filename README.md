@@ -14,7 +14,8 @@ CSS**, **Zustand**, **TanStack React Query**, and **json-server**.
 | Styling              | Tailwind CSS v3 + custom design tokens |
 | State Management     | Zustand v4 (with devtools middleware)  |
 | Server State / Cache | TanStack React Query v5                |
-| Mock REST API        | json-server                            |
+<!-- | Mock REST API        | json-server                            | -->
+| In-memory data store | (no external DB)                         |
 | HTTP Client          | Axios                                  |
 
 ---
@@ -64,56 +65,108 @@ db.json                          # json-server mock database
 
 ---
 
-## Getting Started
+## 🗂️ Data Model
 
-### 1. Install
+```ts
+interface Task {
+  id: number
+  title: string
+  description: string
+  column: 'backlog' | 'in_progress' | 'review' | 'done'
+  tag: 'high' | 'mid' | 'low'
+}
+```
+
+---
+
+## 📡 API Endpoints
+
+### Tasks
+
+| Method | Endpoint          | Description              |
+|--------|-------------------|--------------------------|
+| GET    | `/api/tasks`      | Get all tasks            |
+| GET    | `/api/tasks`      | Filter by column |
+| GET    | `/api/tasks/:id`  | Get a single task        |
+| POST   | `/api/tasks`      | Create a new task        |
+| PATCH  | `/api/tasks/:id`  | Update a task            |
+| DELETE | `/api/tasks/:id`  | Delete a task            |
+
+### Example Requests
+
+**Get all tasks**
+```http
+GET /api/tasks
+```
+
+**Filter by column**
+```http
+GET /api/tasks?column=in_progress
+```
+
+**Create a task**
+```http
+POST /api/tasks
+Content-Type: application/json
+
+{
+  "title": "New Task",
+  "description": "Task description",
+  "column": "backlog",
+  "tag": "high"
+}
+```
+
+**Move task to another column**
+```http
+PATCH /api/tasks/1
+Content-Type: application/json
+
+{
+  "column": "in_progress"
+}
+```
+
+**Delete a task**
+```http
+DELETE /api/tasks/1
+```
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Run (Next.js + json-server together)
+### 2. Run the development server
 
 ```bash
 npm run dev
 ```
 
-- **App**: http://localhost:3000
-- **API**: http://localhost:3001
-
-### 3. Change API port
-
-In `package.json` change `--port 3001` to any port, then update `.env.local`:
-
-```
-NEXT_PUBLIC_API_URL=http://localhost:YOUR_PORT
-```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## API Endpoints (json-server)
+## ☁️ Deploying to Vercel
 
-| Method | Endpoint     | Action         |
-| ------ | ------------ | -------------- |
-| GET    | `/tasks`     | List all tasks |
-| GET    | `/tasks/:id` | Get one task   |
-| POST   | `/tasks`     | Create task    |
-| PATCH  | `/tasks/:id` | Update task    |
-| DELETE | `/tasks/:id` | Delete task    |
+1. Push your project to GitHub
+2. Go to [vercel.com](https://vercel.com) and import your repo
+3. Click **Deploy** — no environment variables needed
+
+> ⚠️ **Note:** Since the data is stored in-memory, it resets on every server restart or redeploy. This is intentional for a demo/portfolio project. If you need persistence, consider migrating to [Supabase](https://supabase.com) or [PlanetScale](https://planetscale.com).
 
 ---
 
-## Architecture
+## 📌 Columns
 
-**Zustand + React Query pattern:**
-
-- React Query handles fetching, caching (1 min stale time), and background sync
-- On success → seeds the Zustand store via `setTasks()`
-- All CRUD mutations do **optimistic updates** in Zustand first
-- React Query invalidates cache after each mutation for consistency
-
-**Feature-based structure:**
-
-- `features/board` owns the layout, columns, header, and board-level state
-- `features/tasks` owns the card and modal (task-specific UI)
-- `store/` and `lib/` are shared across features
+| Column       | Description              |
+|--------------|--------------------------|
+| `backlog`    | Tasks not started yet    |
+| `in_progress`| Tasks currently in work  |
+| `review`     | Tasks pending review     |
+| `done`       | Completed tasks          |
