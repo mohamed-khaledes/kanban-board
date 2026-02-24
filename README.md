@@ -27,6 +27,11 @@ src/
 │   ├── globals.css           # Tailwind base + Google Fonts
 │   ├── layout.tsx            # Root layout (QueryProvider)
 │   └── page.tsx              # Home → KanbanBoard
+│   ├── api/
+│   │   └── tasks               # tasks api
+│             └── route.ts              
+│             └── [id]             
+│                   └── route.ts           
 │
 ├── features/
 │   ├── board/
